@@ -41,13 +41,8 @@ app.get("/api/generate", async (req, res) => {
       date: params.date,
     };
     console.log("context: ", context);
-    //   const context = {
-    //     bayOrientation: "↑",
-    //     bayId: "AL-02",
-    //     designer: params.designer,
-    //     dateIn: "01-01-2024",
-    //   };
-    //   http://localhost:3000/api/generate?orientation=up&id=AL-01&designer=Mac%20Greene
+
+    // http://localhost:3000/api/generate?orientation=up&id=AL-01&designer=Mac%20Greene&date="1-1-2024"
 
     // create HTML, PDF, add to S3 Bucket
     const htmlTemplateFilePath = "./views/template.html";
