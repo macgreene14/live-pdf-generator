@@ -11,7 +11,6 @@
 - **Puppeteer PDF Creation**: Convert HTML templates into PDFs using Puppeteer.
 - **S3 Integration**: Automatically upload generated PDFs to Amazon S3 for reliable storage and easy access.
 - **Express Server**: A robust server setup using Express to handle incoming requests.
-- **Airtable Integration**: Seamlessly integrate with Airtable for fetching necessary data for bay labels.
 
 ## Requirements
 
@@ -27,7 +26,6 @@
    BUCKET_REGION="s3-bucket-region"
    ACCESS_KEY="s3-user-access-key"
    SECRET_ACCESS_KEY="s3-user-secret-key"
-   NODE_ENV="development"
    ```
 2. Customize the Handlebars template in the `templates` directory as needed. Modify the context object when parsing query string params to match the template.
 

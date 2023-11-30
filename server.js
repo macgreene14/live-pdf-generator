@@ -6,21 +6,8 @@ import html2pdf from "./lib/html2pdf.js";
 import uploadPDF2S3 from "./lib/S3.js";
 
 // access .env variables
-// Load different .env files based on NODE_ENV
-switch (process.env.NODE_ENV) {
-  case "production":
-    dotenv.config({ path: "./.env.production" });
-    break;
-  case "development":
-    dotenv.config({ path: "./.env.local" });
-    break;
-  case "test":
-    dotenv.config({ path: "./.env.test" });
-    break;
-  default:
-    dotenv.config(); // Default to .env
-    break;
-}
+dotenv.config({ path: "./.env.local" });
+
 const accessKeyId = process.env.ACCESS_KEY;
 const secretAccessKey = process.env.SECRET_ACCESS_KEY;
 const region = process.env.BUCKET_REGION;
@@ -37,12 +24,13 @@ app.get("/api/generate", async (req, res) => {
     const context = {
       orientation: params.orientation,
       id: params.id,
+      job: params.job,
       designer: params.designer,
       date: params.date,
     };
     console.log("context: ", context);
 
-    // http://localhost:3000/api/generate?orientation=up&id=AL-01&designer=Mac%20Greene&date="1-1-2024"
+    // http://localhost:3000/api/generate?orientation=↑&id=AL-01&designer=Mac%20Greene&date="1-1-2024"
 
     // create HTML, PDF, add to S3 Bucket
     const htmlTemplateFilePath = "./views/template.html";

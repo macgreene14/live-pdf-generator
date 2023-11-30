@@ -9,8 +9,7 @@
         width: 297mm;
         height: 210mm;
         margin: 0mm;
-        padding: 0mm;
-        page-break-after: always;
+        padding: 10mm;
         background: white;
       }
       .container-col {
@@ -25,11 +24,18 @@
         flex-direction: row;
         justify-content: space-around;
         align-items: center;
+        width: 100%;
+
       }
       .info {
         color: black;
         text-align: center;
-        font-size: 40px;
+        font-size: 50px;
+        font-weight: bolder;
+      }
+      .container-row p {
+        margin:2%;
+        font-size: 60px;
       }
     </style>
   </head>
@@ -38,11 +44,13 @@
       <div class="info">
         <div class="container-row">
           <p>{{orientation}}</p>
-          <h2>{{id}}</h2>
+          <p style="min-width: 200mm;">{{id}}</p>
           <p>{{orientation}}</p>
         </div>
+        <p>{{job}}</p>
         <p>{{designer}}</p>
         <p>{{date}}</p>
+        <img src="https://ik.imagekit.io/bamlnhgnz/HOT_logo_outline_square.jpg" width="auto" height="150px"></img>
       </div>
     </div>
   </body>
