@@ -1,8 +1,8 @@
-# README.md for Live-PDF-Generate
+# Live-PDF-Generater
 
 ## Overview
 
-`live-pdf-generate` is a Node.js application designed to automate the creation of bay labels for warehouse management. It exposes an endpoint to retrieve data, uses Handlebars for templating documents, Puppeteer for generating PDFs from HTML, Amazon S3 for storing and retrieving PDFs with live URLs, and Express for handling HTTP requests.
+`live-pdf-generater` is a Node.js application designed to automate the creation of bay labels for warehouse management. It exposes an endpoint to retrieve data, uses Handlebars for templating documents, Puppeteer for generating PDFs from HTML, Amazon S3 for storing and retrieving PDFs with live URLs, and Express for handling HTTP requests.
 
 ## Features
 

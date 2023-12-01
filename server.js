@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import express from "express";
 import fs from "fs";
-import createHTML from "./lib/templater.js";
+import Handlebars from "handlebars";
 import html2pdf from "./lib/html2pdf.js";
 import uploadPDF2S3 from "./lib/S3.js";
 
@@ -12,6 +12,11 @@ const accessKeyId = process.env.ACCESS_KEY;
 const secretAccessKey = process.env.SECRET_ACCESS_KEY;
 const region = process.env.BUCKET_REGION;
 const bucketName = process.env.BUCKET_NAME;
+
+// compile template
+const htmlTemplateFilePath = "./views/template.html";
+const htmlTemplate = fs.readFileSync(htmlTemplateFilePath, "utf8");
+const template = Handlebars.compile(htmlTemplate);
 
 // create instance of express server
 const app = express();
@@ -28,17 +33,15 @@ app.get("/api/generate", async (req, res) => {
       designer: params.designer,
       date: params.date,
     };
-    console.log("context: ", context);
 
     // http://localhost:3000/api/generate?orientation=↑&id=AL-01&designer=Mac%20Greene&date="1-1-2024"
 
     // create HTML, PDF, add to S3 Bucket
-    const htmlTemplateFilePath = "./views/template.html";
-    const htmlString = fs.readFileSync(htmlTemplateFilePath, "utf8");
-    const html = createHTML(htmlString, context);
+    const html = template(context);
     const pdfBuffer = await html2pdf(html);
     const pdfKey = "key";
-    const response = await uploadPDF2S3(
+
+    const url = await uploadPDF2S3(
       accessKeyId,
       secretAccessKey,
       region,
@@ -46,17 +49,13 @@ app.get("/api/generate", async (req, res) => {
       pdfKey,
       pdfBuffer
     );
-    console.log(response);
 
-    // create url of S3 Object
-    const objectUrl = `https://${bucketName}.s3.${region}.amazonaws.com/${pdfKey}`;
-
-    res.send(objectUrl);
+    res.status(200).send(url);
   } catch (e) {
-    (e) => res.send(e);
+    (e) => res.status(500).send(e);
   }
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`PDF Generator listening on port ${port}`);
 });
