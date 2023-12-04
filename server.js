@@ -20,7 +20,7 @@ const template = Handlebars.compile(htmlTemplate);
 
 // create instance of express server
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000; // Use Heroku's PORT or 3000 if local
 
 app.get("/api/generate", async (req, res) => {
   try {
