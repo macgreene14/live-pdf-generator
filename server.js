@@ -37,7 +37,11 @@ app.get("/api/generate", async (req, res) => {
 
     // create HTML, PDF, add to S3 Bucket
     const html = template(context);
-    var options = { format: "a4", orientation: "landscape" };
+    var options = {
+      format: "a4",
+      orientation: "landscape",
+      childProcessOptions: { env: { OPENSSL_CONF: "/dev/null" } },
+    };
 
     const pdfBuffer = await new Promise((resolve, reject) => {
       pdf.create(html, options).toBuffer(function (err, buffer) {
