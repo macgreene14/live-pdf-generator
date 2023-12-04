@@ -13,9 +13,10 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.462.0",
     "aws-sdk": "^2.1508.0",
+    "chrome-aws-lambda": "^10.1.0",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "handlebars": "^4.7.8",
-    "puppeteer": "^21.5.2"
+    "puppeteer-core": "^10.1.0"
   }
 }
