@@ -33,12 +33,14 @@ app.get("/api/generate", async (req, res) => {
       designer: params.designer,
       date: params.date,
     };
-
+    console.log(context);
     // http://localhost:3000/api/generate?orientation=↑&id=AL-01&designer=Mac%20Greene&date="1-1-2024"
 
     // create HTML, PDF, add to S3 Bucket
     const html = template(context);
+    console.log(html);
     const pdfBuffer = await html2pdf(html);
+    console.log(pdfBuffer);
     const pdfKey = "key";
 
     const url = await uploadPDF2S3(
@@ -49,6 +51,7 @@ app.get("/api/generate", async (req, res) => {
       pdfKey,
       pdfBuffer
     );
+    console.log(url);
 
     res.status(200).send(url);
   } catch (e) {
