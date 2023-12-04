@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import express from "express";
 import fs from "fs";
 import Handlebars from "handlebars";
-import html2pdf from "./lib/html2pdf.js";
+import pdf from "html-pdf";
 import uploadPDF2S3 from "./lib/S3.js";
 
 // access .env variables
@@ -33,14 +33,23 @@ app.get("/api/generate", async (req, res) => {
       designer: params.designer,
       date: params.date,
     };
-    console.log(context);
     // http://localhost:3000/api/generate?orientation=↑&id=AL-01&designer=Mac%20Greene&date="1-1-2024"
 
     // create HTML, PDF, add to S3 Bucket
     const html = template(context);
-    console.log(html);
-    const pdfBuffer = await html2pdf(html);
-    console.log(pdfBuffer);
+    var options = { format: "a4", orientation: "landscape" };
+
+    const pdfBuffer = await new Promise((resolve, reject) => {
+      pdf.create(html, options).toBuffer(function (err, buffer) {
+        if (err) {
+          reject(err);
+        } else {
+          console.log("This is a buffer:", Buffer.isBuffer(buffer));
+          resolve(buffer);
+        }
+      });
+    });
+
     const pdfKey = "key";
 
     const url = await uploadPDF2S3(
