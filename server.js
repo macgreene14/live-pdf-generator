@@ -14,7 +14,7 @@ const region = process.env.BUCKET_REGION;
 const bucketName = process.env.BUCKET_NAME;
 
 // compile template
-const htmlTemplateFilePath = "./views/template.html";
+const htmlTemplateFilePath = "./views/template.handlebars";
 const htmlTemplate = fs.readFileSync(htmlTemplateFilePath, "utf8");
 const template = Handlebars.compile(htmlTemplate);
 
@@ -22,23 +22,28 @@ const template = Handlebars.compile(htmlTemplate);
 const app = express();
 const port = process.env.PORT || 3000; // Use Heroku's PORT or 3000 if local
 
-app.get("/api/generate", async (req, res) => {
+app.get("/generate", async (req, res) => {
   try {
     // access query string params
     const params = req.query;
-    const context = {
-      orientation: params.orientation,
-      id: params.id,
-      job: params.job,
-      designer: params.designer,
-      date: params.date,
-    };
-    // http://localhost:3000/api/generate?orientation=↑&id=AL-01&designer=Mac%20Greene&date="1-1-2024"
+    let context = { items: null, logo: null, fontSize: "50px" };
+    let pdfKey = "pdf";
+
+    if (params.items) {
+      context.items = params.items.split(",");
+      pdfKey = context.items.join("_");
+    }
+    if (params.logo) {
+      context.logo = params.logo;
+    }
+    if (params.fontSize) {
+      context.fontSize = params.fontSize;
+    }
 
     // create HTML, PDF, add to S3 Bucket
     const html = template(context);
     var options = {
-      format: "a4",
+      format: "letter",
       orientation: "landscape",
       childProcessOptions: { env: { OPENSSL_CONF: "/dev/null" } },
     };
@@ -48,13 +53,10 @@ app.get("/api/generate", async (req, res) => {
         if (err) {
           reject(err);
         } else {
-          console.log("This is a buffer:", Buffer.isBuffer(buffer));
           resolve(buffer);
         }
       });
     });
-
-    const pdfKey = "key";
 
     const url = await uploadPDF2S3(
       accessKeyId,
@@ -64,7 +66,6 @@ app.get("/api/generate", async (req, res) => {
       pdfKey,
       pdfBuffer
     );
-    console.log(url);
 
     res.status(200).send(url);
   } catch (e) {
